@@ -24,6 +24,20 @@
 </head>
 <body>
     <header>
+        <ul>
+            <li>
+                <a href="/dash_board">메인페이지</a>
+            </li>
+            <li>
+                <a href="/basic">기본 정보추가</a>
+            </li>
+            <li>
+                <a href="/books/book/list">도서 관리 페이지</a>
+            </li>
+            <li>
+                <a href="/books/recommend/list">도서 추천 리스트 관리 페이지</a>
+            </li>
+        </ul>
     </header>
 </body>
 </html>

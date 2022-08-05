@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greenart.library_admin.mapper.BookMapper">
+    <insert id="insertBookInfo" parameterType="com.greenart.library_admin.data.Book_infoVO" useGeneratedKeys="true" keyProperty="bi_seq">
+        INSERT INTO book_info
+        (bi_wri_seq, bi_gr_seq, bi_title, bi_pb_name,bi_explain, bi_end_page)
+        VALUES
+        (#{bi_wri_seq}, #{bi_gr_seq}, #{bi_title}, #{bi_pb_name},#{bi_explain}, #{bi_end_page})
+    </insert>
+    <insert id="insertBookCover">
+        INSERT INTO library_db.book_cover_info
+        (bc_img_file, bc_bi_seq, bc_is_poster)
+        VALUES
+        <foreach collection="data" item="item" separator=",">
+        (#{item},#{seq},0)
+        </foreach>
+    </insert>
+    <insert id="insertBookContent">
+        INSERT INTO book_content_info
+        (bcon_page, bcon_text, bcon_bi_seq)
+        VALUES
+        <foreach collection="data" item="item" separator=",">
+        (#{item.order},#{item.content},#{seq})
+        </foreach>
+    </insert>
+
+    <insert id="insertRecommendBooks">
+        INSERT INTO admin_recommend_books
+        (ar_bi_seq, ar_title)
+        VALUES
+        <foreach collection="data" item="item" separator=",">
+        (#{item},#{title})
+        </foreach>
+    </insert>
+
+    <select id="selectAllBooks" resultType="com.greenart.library_admin.data.Book_infoVO">
+        select a.*,b.wri_name ,c.gr_name,d.bc_img_file  from book_info a left outer join writer_info b
+        on a.bi_wri_seq = b.wri_seq left outer join genre_info c 
+        on a.bi_gr_seq = c.gr_seq left outer join 
+        (
+            select * from book_cover_info where bc_is_poster =1
+        )d on a.bi_seq = d.bc_bi_seq
+        where bi_title like '%${keyword}%'
+        order by bi_reg_dt desc
+        limit 10 offset #{offset}
+    </select>
+    <select id="selectBooksCnt" resultType="java.lang.Integer">
+        select ceil(count(*)/10) from book_info where bi_title like '%${keyword}%'
+    </select>
+    <select id="selectAllRecommendList" resultType="com.greenart.library_admin.data.RecommendSummaryVO">
+        select a.ar_seq ,a.ar_title ,c.bc_img_file from admin_recommend_books a left outer join book_info b 
+        on a.ar_bi_seq = b.bi_seq left outer join 
+        (
+            select * from book_cover_info where bc_is_poster = 1
+        )c on b.bi_seq = c.bc_bi_seq
+        group by ar_title having ar_title like '%${keyword}%'
+        limit 10 offset #{offset}
+    </select>
+    <select id="selectAllRecommendListCnt" resultType="java.lang.Integer">
+        select ceil(count(distinct(ar_title))/10) from admin_recommend_books where ar_title like '%${keyword}%'
+    </select>
+    <select id="selectAllRecommendBooks" resultType="com.greenart.library_admin.data.BookSummaryVO">
+        select b.bi_seq ,b.bi_title ,c.bc_img_file ,d.wri_name  from admin_recommend_books a left outer join book_info b
+        on a.ar_bi_seq = b.bi_seq left outer join book_cover_info c 
+        on b.bi_seq = c.bc_bi_seq left outer join writer_info d
+        on b.bi_wri_seq = d.wri_seq
+        where ar_title = #{title}
+    </select>
+</mapper>

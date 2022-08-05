@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greenart.library_admin.mapper.QnaMapper">
+    <select id="selectQnaBySeq" resultType="com.greenart.library_admin.data.Question_infoVO">
+        select a.qi_seq ,a.qi_title,a.qi_text  ,a.qi_reg_dt ,b.rd_id as id  
+        from question_info a left outer join reader_info b
+        on a.qi_rd_seq = b.rd_seq
+        where qi_seq = #{seq}
+    </select>
+    <select id="selectAnswerBySeq" resultType="com.greenart.library_admin.data.Answer_infoVO">
+        select * from answer_info where an_qi_seq = #{seq}
+    </select>
+
+    <update id="updateQuestionStatus">
+        update question_info 
+        set qi_check = 1
+        where qi_seq = #{seq}
+    </update>
+
+    <update id="updateAnserInfo">
+        update answer_info 
+        set an_text = #{an_text}
+        where an_seq = #{an_seq}
+    </update>
+
+    <insert id="insertAnswerInfo">
+        insert into answer_info (an_qi_seq,an_text)
+        values
+        (#{an_qi_seq},#{an_text})
+    </insert>
+</mapper>

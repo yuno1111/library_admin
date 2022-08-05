@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greenart.library_admin.mapper.BasicMapper">
+    <!-- 기본 정보 -->
+    <insert id="insertGenre">
+        insert into genre_info (gr_name)
+        values
+            (#{name})
+    </insert>
+    <insert id="insertWriter">
+        insert into writer_info (wri_name)
+        values
+            (#{name})
+    </insert>
+
+    <delete id="deleteGenre">
+        delete from genre_info where gr_seq = #{seq}
+    </delete>
+    <delete id="deleteWriter">
+        delete from writer_info where wri_seq = #{seq}
+    </delete>
+
+    <select id="selectGenre" resultType="com.greenart.library_admin.data.genre_info">
+        select * from genre_info
+    </select>
+    <select id="selectWriter" resultType="com.greenart.library_admin.data.writer_info">
+        select * from writer_info
+    </select>
+    <!-- ============ -->
+
+
+</mapper>
