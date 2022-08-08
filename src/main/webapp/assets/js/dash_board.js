@@ -5,6 +5,8 @@ $(function(){
         getQnaList(null);
         makePager();
     })
+    $(".total_upload_book_list_item").click(function(){$(".total_upload_book_list_popup").show()})
+    $(".books_summary_list_cancel").click(function(){$(".total_upload_book_list_popup").hide()})
 })
 
 

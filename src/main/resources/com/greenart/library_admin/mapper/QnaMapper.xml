@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.greenart.library_admin.mapper.QnaMapper">
+    <!-- QNA AREA -->
     <select id="selectQnaBySeq" resultType="com.greenart.library_admin.data.Question_infoVO">
         select a.qi_seq ,a.qi_title,a.qi_text  ,a.qi_reg_dt ,b.rd_id as id  
         from question_info a left outer join reader_info b
@@ -29,4 +30,40 @@
         values
         (#{an_qi_seq},#{an_text})
     </insert>
+    <!-- ======== -->
+
+    <!-- Notice AREA -->
+    <insert id="insertNoticeInfo">
+        INSERT INTO library_db.notice_info
+        (ni_aai_seq, ni_text, ni_reg_dt, ni_title)
+        VALUES
+        (#{ni_aai_seq}, #{ni_text}, now(), #{ni_title})
+    </insert>
+
+    <select id="selectAllNoticeInfo" resultType="com.greenart.library_admin.data.NoticeInfoVO">
+        select a.*,b.aai_id  from notice_info a inner join admin_account_info b 
+        on a.ni_aai_seq = b.aai_seq 
+        where ni_title like '%${keyword}%'
+        order by ni_seq desc
+        limit 10 offset #{offset}
+    </select>
+    <select id="selectAllNoticePageCnt" resultType="java.lang.Integer">
+        select ceil(count(*)/10) from notice_info where ni_title like '%${keyword}%'
+    </select>
+    <select id="selectNoticeInfoBySeq" resultType="com.greenart.library_admin.data.NoticeInfoVO">
+        select a.*,b.aai_id  from notice_info a inner join admin_account_info b 
+        on a.ni_aai_seq = b.aai_seq 
+        where ni_seq = #{seq}
+    </select>
+
+    <update id="updateNoticeInfo">
+        UPDATE notice_info
+        SET  ni_text=#{ni_text}, ni_reg_dt=CURRENT_TIMESTAMP, ni_title=#{ni_title}
+        WHERE ni_seq=#{ni_seq}
+    </update>
+
+    <delete id="deleteNoticeInfo">
+        delete from notice_info where ni_seq = #{seq}
+    </delete>
+    <!-- =========== -->
 </mapper>

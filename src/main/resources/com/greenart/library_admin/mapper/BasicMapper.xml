@@ -29,5 +29,37 @@
     </select>
     <!-- ============ -->
 
+    <!-- 계정 정보 -->
+    <select id="selectAdminLogin" resultType="com.greenart.library_admin.data.AdminAccountInfoVO">
+        select aai_seq,aai_id,aai_role from admin_account_info where aai_id= #{id} and aai_pwd = #{pwd}
+    </select>
+    <select id="selectAllAdminAccount" resultType="com.greenart.library_admin.data.AdminAccountInfoVO">
+        select aai_seq,aai_id,aai_role from admin_account_info where aai_id like '%${keyword}%'
+        order by aai_seq desc
+        limit 10 offset #{offset}
+    </select>
+    <select id="selectAllAdminAccountPageCnt" resultType="java.lang.Integer">
+        select ceil(count(*)/10) from admin_account_info where aai_id like '%${keyword}%'
+    </select>
+    <select id="selectAllUserAccount" resultType="com.greenart.library_admin.data.ReaderInfoVO">
+        select rd_seq,rd_rp_seq,rd_id,rd_name,rd_phone,rd_gen,rd_role,rd_status,rd_nickname,rd_reg_dt,rd_mod_dt,rd_profile
+        from reader_info where rd_id like '%${keyword}%'
+        order by rd_seq desc
+        limit 10 offset #{offset}
+    </select>
+    <select id="selectAllUserAccountPageCnt" resultType="java.lang.Integer">
+        select ceil(count(*)/10) from reader_info where rd_id like '%${keyword}%'
+    </select>
 
+    <insert id="insertAdminAccount">
+    INSERT INTO admin_account_info
+    (aai_id, aai_pwd, aai_role)
+    VALUES
+    (#{aai_id}, #{aai_pwd}, #{aai_role})
+    </insert>
+
+    <delete id="deleteAdminAccount">
+        delete from admin_account_info where aai_seq = #{seq}
+    </delete>
+    <!-- ========== -->
 </mapper>

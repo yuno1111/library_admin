@@ -12,12 +12,14 @@ public class MainController {
     @Autowired MainMapper main_mapper;
     @GetMapping("/")
     public String getLogin(){
-        return "index";
+        return "/index";
     }
     @GetMapping("/dash_board")
     public String getDashBoard(Model model
     ){
-
-        return "dash_board";
+        model.addAttribute("userCnt", main_mapper.selectAllUserCnt());
+        model.addAttribute("bookCnt", main_mapper.selectAllBooksCnt());
+        model.addAttribute("newBookList", main_mapper.selectNewbooks());
+        return "/dash_board";
     }
 }

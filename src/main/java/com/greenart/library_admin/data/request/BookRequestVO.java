@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 public class BookRequestVO {
     private Book_infoVO book_info;
-    private List<String> book_covers;
+    private List<BookCoverListVO> book_covers;
     private List<BookContentListVO> book_content_list;
 }

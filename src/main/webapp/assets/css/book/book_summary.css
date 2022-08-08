@@ -1,0 +1,18 @@
+.book_simple_list_wrap{
+    width: 1000px; height: 400px; border: 1px solid #000; margin: 0 auto; margin-top: 10px;
+}
+.book_simple_list_left_area{
+    width: 499px; height: 400px; display: inline-block;
+}
+.book_simple_list_right_area{
+    width: 495px; height: 400px; border: 1px solid #000; display: inline-block;
+}
+.book_simple_img_area{
+    width: 399px; height: 400px; background-repeat: no-repeat; background-position: center; background-size: 100% auto;
+}
+.main_banner .swiper-button-prev {
+    left: 0px; filter:grayscale(1) brightness(10) drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+}
+.main_banner .swiper-button-next {
+    left: 370px; filter:grayscale(1) brightness(10) drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+}

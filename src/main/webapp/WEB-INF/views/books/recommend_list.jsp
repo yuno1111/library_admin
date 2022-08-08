@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="/assets/css/book/recommend_list.css">
+    <script src="/assets/js/books/recommend_list.js"></script>
 </head>
 <body>
     <main>
@@ -26,9 +27,10 @@
                         </div>
                         <div class="books_summary_txt">
                             <p class="books_list_name">${item.ar_title}</p>
+                        </a>
+                            <button class="books_list_del" data-name="${item.ar_title}">삭제</button>
                         </div>
                     </div>
-                </a>
             </c:forEach>
         </section>
         <div class="pager_area">

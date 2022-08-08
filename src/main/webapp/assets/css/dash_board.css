@@ -1,5 +1,18 @@
+.total_upload_book_list_item{
+    cursor: pointer;
+}
 
-.books_recommend_list {width: 990px; text-align: left; margin:0 auto; padding: 20px 0px; 
+.total_upload_book_list_popup{
+    position: fixed; width: 100vw; height: 100vh; background-color: #00000055;
+    left: 0; top: 0; z-index: 9;
+}
+.book_summary_list_wrap{
+    width: 1000px; height: 500px; background-color: #fff; margin: 0 auto; margin-top: 200px;
+}
+.books_summary_list_cancel{
+    display: inline-block;
+}
+.books_summary_list {width: 990px; text-align: left; margin:0 auto; padding: 20px 0px; 
 }
 
 

@@ -13,7 +13,7 @@
         (bc_img_file, bc_bi_seq, bc_is_poster)
         VALUES
         <foreach collection="data" item="item" separator=",">
-        (#{item},#{seq},0)
+        (#{item.book_covers},#{seq},#{item.is_poster})
         </foreach>
     </insert>
     <insert id="insertBookContent">
@@ -49,22 +49,91 @@
         select ceil(count(*)/10) from book_info where bi_title like '%${keyword}%'
     </select>
     <select id="selectAllRecommendList" resultType="com.greenart.library_admin.data.RecommendSummaryVO">
-        select a.ar_seq ,a.ar_title ,c.bc_img_file from admin_recommend_books a left outer join book_info b 
-        on a.ar_bi_seq = b.bi_seq left outer join 
+        select a.ar_seq ,a.ar_title ,c.bc_img_file from admin_recommend_books a inner join book_info b 
+        on a.ar_bi_seq = b.bi_seq inner join 
         (
             select * from book_cover_info where bc_is_poster = 1
         )c on b.bi_seq = c.bc_bi_seq
         group by ar_title having ar_title like '%${keyword}%'
+        order by ar_seq desc
         limit 10 offset #{offset}
     </select>
     <select id="selectAllRecommendListCnt" resultType="java.lang.Integer">
         select ceil(count(distinct(ar_title))/10) from admin_recommend_books where ar_title like '%${keyword}%'
     </select>
     <select id="selectAllRecommendBooks" resultType="com.greenart.library_admin.data.BookSummaryVO">
-        select b.bi_seq ,b.bi_title ,c.bc_img_file ,d.wri_name  from admin_recommend_books a left outer join book_info b
-        on a.ar_bi_seq = b.bi_seq left outer join book_cover_info c 
+        select b.bi_seq ,b.bi_title ,c.bc_img_file ,d.wri_name  from admin_recommend_books a inner join book_info b
+        on a.ar_bi_seq = b.bi_seq left outer join 
+        (
+            select * from book_cover_info where bc_is_poster =1
+        ) c 
         on b.bi_seq = c.bc_bi_seq left outer join writer_info d
         on b.bi_wri_seq = d.wri_seq
         where ar_title = #{title}
+        group by bi_seq
     </select>
+
+    <delete id="deleteRecommendList">
+        delete from admin_recommend_books where ar_title = #{title}
+    </delete>
+
+    <select id="selectBooksBySeq" resultType="com.greenart.library_admin.data.Book_infoVO">
+        select * from book_info where bi_seq =#{seq}
+    </select>
+    <select id="selectSummaryBooksBySeq" resultType="com.greenart.library_admin.data.Book_infoVO">
+        select a.*,b.wri_name,c.gr_name  from book_info a 
+        left outer join writer_info b
+        on a.bi_wri_seq = b.wri_seq left outer join genre_info c
+        on a.bi_gr_seq = c.gr_seq 
+        where bi_seq = #{seq}
+    </select>
+    <select id="selectBookContentBySeq" resultType="com.greenart.library_admin.data.request.BookContentListVO">
+        select bcon_page as 'order', bcon_text as content from book_content_info where bcon_bi_seq = #{seq}
+    </select>
+    <select id="selectBooksCoverBySeq" resultType="com.greenart.library_admin.data.request.BookCoverListVO">
+        select bc_seq as seq,bc_img_file as book_covers from book_cover_info where bc_bi_seq = #{seq}
+    </select>
+
+    <delete id="deleteBookCovers">
+        delete from book_cover_info where bc_seq = #{seq}
+    </delete>
+    <delete id="deleteBook">
+        delete from book_info where bi_seq = #{seq}
+    </delete>
+
+    <insert id="insertBookCovers" parameterType="com.greenart.library_admin.data.request.BookCoverListVO" useGeneratedKeys="true" keyProperty="bc_seq">
+        INSERT INTO book_cover_info
+        (bc_img_file, bc_bi_seq, bc_is_poster)
+        VALUES
+        (#{book_covers}, #{seq}, 0)
+    </insert>
+
+    <update id="patchBookInfo">
+        UPDATE book_info
+        SET bi_wri_seq=#{bi_wri_seq}, bi_gr_seq=#{bi_gr_seq}, bi_title=#{bi_title}, bi_pb_name=#{bi_pb_name}, bi_explain=#{bi_explain}
+        WHERE bi_seq=#{bi_seq};
+    </update>
+
+    <delete id="deleteBookCoverByBi_seq">
+        delete from book_cover_info where bc_bi_seq = #{seq}
+    </delete>
+
+    <delete id="deleteBookContentsByBi_seq">
+        delete from book_content_info where bcon_bi_seq = #{seq}
+    </delete>
+
+    <select id="selectBookCommentInfo" resultType="com.greenart.library_admin.data.BookCommentVO">
+        select a.*,b.rd_seq ,b.rd_id,b.rd_nickname  from book_reply a inner join reader_info b
+        on a.bre_rd_seq = b.rd_seq
+        where bre_bi_seq = #{seq}
+        order by bre_seq desc
+        limit 10 offset #{offset}
+    </select>
+    <select id="selectBookCommentPageCnt" resultType="java.lang.Integer">
+        select ceil(count(*)/10) from book_reply where bre_seq = #{seq}
+    </select>
+
+    <delete id="deleteBookCommentBySeq">
+        delete from book_reply where bre_seq = #{seq}
+    </delete>
 </mapper>

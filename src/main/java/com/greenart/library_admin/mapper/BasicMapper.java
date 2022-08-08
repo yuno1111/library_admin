@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.greenart.library_admin.data.AdminAccountInfoVO;
+import com.greenart.library_admin.data.ReaderInfoVO;
 import com.greenart.library_admin.data.genre_info;
 import com.greenart.library_admin.data.writer_info;
 
@@ -15,4 +17,13 @@ public interface BasicMapper {
     public void deleteWriter(Integer seq);
     public List<genre_info> selectGenre();
     public List<writer_info> selectWriter();
+
+    public AdminAccountInfoVO selectAdminLogin(String id, String pwd);
+    public List<AdminAccountInfoVO> selectAllAdminAccount(String keyword,Integer offset);
+    public Integer selectAllAdminAccountPageCnt(String keyword);
+    public void insertAdminAccount(AdminAccountInfoVO data);
+    public void deleteAdminAccount(Integer seq);
+
+    public List<ReaderInfoVO> selectAllUserAccount(String keyword,Integer offset);
+    public Integer selectAllUserAccountPageCnt(String keyword);
 }

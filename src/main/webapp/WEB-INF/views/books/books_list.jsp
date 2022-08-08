@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <script src="/assets/js/books/book_list.js"></script>
 </head>
 <body>
     <main>
@@ -34,12 +35,13 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${list}" var="item" varStatus="stat">
-                        <tr>
-                            <td>${stat.count}</td>
+                            <tr>
+                                <td>${stat.count}</td>
                             <td style="background-image: url('/images/book_cover/${item.bc_img_file}'); width: 60px; height: 60px; background-position: center;
-                            background-repeat: no-repeat;"></td>
+                            background-repeat: no-repeat;">
+                            </td>
                             <td>
-                                ${item.bi_title}
+                                <a href="/books/book/summary?seq=${item.bi_seq}">${item.bi_title}</a>
                             </td>
                             <td>
                                 ${item.gr_name}
@@ -57,7 +59,7 @@
                                 나중에추가
                             </td>
                             <td>
-                                <button data-seq="${item.bi_seq}" class="del_book">삭제</button>
+                                <button data-seq="${item.bi_seq}" data-name="${item.bi_title}" class="del_book">삭제</button>
                             </td>
                         </tr>
                         </c:forEach>

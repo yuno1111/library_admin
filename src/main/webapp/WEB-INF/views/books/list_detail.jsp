@@ -12,7 +12,7 @@
     <main>
         <section class="books_summary_list">
             <c:forEach items="${list}" var="item">
-                <a href="/books/book/detail?seq=${item.bi_seq}" class="books_summary_item">
+                <a href="/books/book/summary?seq=${item.bi_seq}" class="books_summary_item">
                     <div class="books_summary_detail">
                         <div class="books_summary_img"
                             style="background-image: url('/images/book_cover/${item.bc_img_file}');">

@@ -15,4 +15,22 @@
         select ceil(count(*)/10) from question_info where qi_title like '%${keyword}%'
     </select>
     <!-- ========= -->
+    <!-- 통계 정보 -->
+    <select id="selectAllUserCnt" resultType="java.lang.Integer">
+        select count(*) from reader_info
+    </select>
+    <select id="selectAllBooksCnt" resultType="java.lang.Integer">
+        select count(*) from book_info
+    </select>
+    <select id="selectNewbooks" resultType="com.greenart.library_admin.data.BookSummaryVO">
+        select a.bi_seq ,a.bi_title ,b.bc_img_file ,c.wri_name from book_info a inner join
+        (
+            select * from book_cover_info where bc_is_poster =1
+        ) b 
+        on a.bi_seq = b.bc_bi_seq left outer join writer_info c
+        on a.bi_wri_seq = c.wri_seq
+        order by bi_seq desc
+        limit 10
+    </select>
+    <!-- ======== -->
 </mapper>

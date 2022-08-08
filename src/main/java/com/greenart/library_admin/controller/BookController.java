@@ -22,6 +22,22 @@ public class BookController {
         model.addAttribute("writerList", basic_mapper.selectWriter());
         return "/books/book_add";
     }
+    @GetMapping("/book/summary")
+    public String getBookSummary(Model model,@RequestParam Integer seq){
+        model.addAttribute("list", book_mapper.selectSummaryBooksBySeq(seq));
+        model.addAttribute("coverList", book_mapper.selectBooksCoverBySeq(seq));
+        return "/books/book_summary";
+    }
+
+    @GetMapping("/book/detail")
+    public String getBookDetail(Model model,@RequestParam Integer seq){
+        model.addAttribute("bookList", book_mapper.selectBooksBySeq(seq));
+        model.addAttribute("coverList", book_mapper.selectBooksCoverBySeq(seq));
+        model.addAttribute("contentList", book_mapper.selectBookContentBySeq(seq));
+        model.addAttribute("genreList", basic_mapper.selectGenre());
+        model.addAttribute("writerList", basic_mapper.selectWriter());
+        return "/books/book_detail";
+    }
     @GetMapping("/book/list")
     public String getBookList(Model model,
     @RequestParam @Nullable String keyword,
@@ -49,7 +65,7 @@ public class BookController {
     @GetMapping("/list/detail")
     public String getListDetail(Model model,@RequestParam String title){
         model.addAttribute("list", book_mapper.selectAllRecommendBooks(title));
-        return "books/list_detail";
+        return "/books/list_detail";
     }
 
     @GetMapping("recommend/list/add")
