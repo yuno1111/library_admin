@@ -36,7 +36,8 @@
                             </td>
                             <td>
                                 <c:if test="${item.rd_status == 1}">정상</c:if>
-                                <c:if test="${item.rd_status == 2}">탈퇴대기</c:if>
+                                <c:if test="${item.rd_status == 2}">정지</c:if>
+                                <c:if test="${item.rd_status == 3}">탈퇴대기</c:if>
                             </td>
                             <td>
                                 <fmt:formatDate value="${item.rd_reg_dt}" pattern="yyyy-MM-dd"/>

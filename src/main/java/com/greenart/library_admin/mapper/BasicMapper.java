@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.greenart.library_admin.data.AdminAccountInfoVO;
+import com.greenart.library_admin.data.BookReplyDetailVO;
 import com.greenart.library_admin.data.ReaderInfoVO;
+import com.greenart.library_admin.data.RecurringPaymentVO;
 import com.greenart.library_admin.data.genre_info;
 import com.greenart.library_admin.data.writer_info;
 
@@ -26,4 +28,9 @@ public interface BasicMapper {
 
     public List<ReaderInfoVO> selectAllUserAccount(String keyword,Integer offset);
     public Integer selectAllUserAccountPageCnt(String keyword);
+    public BookReplyDetailVO selectUserCommentBySeq(Integer seq);
+
+    public List<RecurringPaymentVO> selectAllPayment();
+    public void insertPayment(RecurringPaymentVO data);
+    public void deletePayment(Integer seq);
 }

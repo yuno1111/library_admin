@@ -10,7 +10,9 @@
         where qi_seq = #{seq}
     </select>
     <select id="selectAnswerBySeq" resultType="com.greenart.library_admin.data.Answer_infoVO">
-        select * from answer_info where an_qi_seq = #{seq}
+        select a.*,b.aai_id  from answer_info a inner join admin_account_info b 
+        on a.an_aai_seq = b.aai_seq 
+        where an_seq = #{seq}
     </select>
 
     <update id="updateQuestionStatus">
@@ -26,9 +28,9 @@
     </update>
 
     <insert id="insertAnswerInfo">
-        insert into answer_info (an_qi_seq,an_text)
+        insert into answer_info (an_qi_seq,an_aai_seq,an_text)
         values
-        (#{an_qi_seq},#{an_text})
+        (#{an_qi_seq},#{an_aai_seq},#{an_text})
     </insert>
     <!-- ======== -->
 

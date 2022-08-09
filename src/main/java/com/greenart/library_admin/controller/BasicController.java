@@ -18,6 +18,7 @@ public class BasicController {
     public String getBasic(Model model){
     model.addAttribute("genreList", basic_mapper.selectGenre());
     model.addAttribute("writerList", basic_mapper.selectWriter());
+    model.addAttribute("paymentList", basic_mapper.selectAllPayment());
     return "/basic/basic_data";
     }
 
@@ -49,7 +50,8 @@ public class BasicController {
         return "/basic/user_account_list";
     }
     @GetMapping("/user/account/detail")
-    public String getUserListBySeq(@RequestParam Integer seq){
+    public String getUserListBySeq(Model model,@RequestParam Integer seq){
+        model.addAttribute("list", basic_mapper.selectUserCommentBySeq(seq));
         return "/basic/user_account_detail";
     }
     

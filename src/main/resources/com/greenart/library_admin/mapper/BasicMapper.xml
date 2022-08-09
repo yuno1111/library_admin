@@ -13,6 +13,11 @@
         values
             (#{name})
     </insert>
+    <insert id="insertPayment">
+        insert into recurring_payment (rp_name,rp_period,rp_role)
+        values
+        (#{rp_name},#{rp_period},#{rp_role})
+    </insert>
 
     <delete id="deleteGenre">
         delete from genre_info where gr_seq = #{seq}
@@ -20,12 +25,18 @@
     <delete id="deleteWriter">
         delete from writer_info where wri_seq = #{seq}
     </delete>
+    <delete id="deletePayment">
+        delete from recurring_payment where rp_seq = #{seq}
+    </delete>
 
     <select id="selectGenre" resultType="com.greenart.library_admin.data.genre_info">
         select * from genre_info
     </select>
     <select id="selectWriter" resultType="com.greenart.library_admin.data.writer_info">
         select * from writer_info
+    </select>
+    <select id="selectAllPayment" resultType="com.greenart.library_admin.data.RecurringPaymentVO">
+        select * from recurring_payment
     </select>
     <!-- ============ -->
 
@@ -50,6 +61,17 @@
     <select id="selectAllUserAccountPageCnt" resultType="java.lang.Integer">
         select ceil(count(*)/10) from reader_info where rd_id like '%${keyword}%'
     </select>
+    <select id="selectUserCommentBySeq" resultType="com.greenart.library_admin.data.BookReplyDetailVO">
+        select a.*,b.bi_seq ,b.bi_title,c.bc_img_file,d.rd_id  from book_reply a inner join book_info b
+        on a.bre_bi_seq = b.bi_seq left outer join 
+        (
+            select * from book_cover_info where bc_is_poster= 1
+        )c
+        on b.bi_seq = c.bc_bi_seq inner join reader_info d
+        on a.bre_rd_seq = d.rd_seq 
+        where bre_rd_seq = #{seq}
+    </select>
+    
 
     <insert id="insertAdminAccount">
     INSERT INTO admin_account_info

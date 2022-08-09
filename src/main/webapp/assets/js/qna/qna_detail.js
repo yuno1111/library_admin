@@ -4,6 +4,7 @@ $(function(){
         
         let data = {
             an_qi_seq:$(this).attr("data-seq"),
+            an_aai_seq:$(".an_aai_seq").val(),
             an_text:$(".qna_answer").val()
         }
 
@@ -14,7 +15,7 @@ $(function(){
             data:JSON.stringify(data),
             success:function(r){
                 alert(r.message);
-                location.reload();
+                location.href="/dash_board";
             }
         })
     })
@@ -33,7 +34,7 @@ $(function(){
             data:JSON.stringify(data),
             success:function(r){
                 alert(r.message);
-                location.reload();
+                location.href="/dash_board";
             }
         })
     })

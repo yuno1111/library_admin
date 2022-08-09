@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.greenart.library_admin.data.AdminAccountInfoVO;
+import com.greenart.library_admin.data.RecurringPaymentVO;
 import com.greenart.library_admin.mapper.BasicMapper;
 import com.greenart.library_admin.util.AESAlgorithm;
 
@@ -41,6 +42,15 @@ public class BasicAPIController {
         return resultMap;
     }
 
+    @PutMapping("/payment_add")
+    public Map<String,Object> putPayment(@RequestBody RecurringPaymentVO data){
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        basic_mapper.insertPayment(data);
+        resultMap.put("status", true);
+        resultMap.put("message", "구독권 정보를 추가하였습니다.");
+        return resultMap;
+    }
+
     @DeleteMapping("/genre_del")
     public Map<String,Object> deleteGenre(@RequestParam Integer seq){
         Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
@@ -55,6 +65,14 @@ public class BasicAPIController {
         basic_mapper.deleteWriter(seq);
         resultMap.put("status", true);
         resultMap.put("message", "작가 정보를 삭제하였습니다.");
+        return resultMap;
+    }
+    @DeleteMapping("/payment_del")
+    public Map<String,Object> deletePayment(@RequestParam Integer seq){
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        basic_mapper.deletePayment(seq);
+        resultMap.put("status", true);
+        resultMap.put("message", "구독권 정보를 삭제하였습니다.");
         return resultMap;
     }
 
