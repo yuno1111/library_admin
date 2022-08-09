@@ -115,20 +115,18 @@ function deleteImg(filename,seq){
     if(!confirm("해당 커버 이미지를 삭제하시겠습니까?\n(❗주의❗ : 삭제된 데이터는 되돌릴 수 없습니다.)")){
         return;
     }
-$.ajax({
-    url:"/images/delete/book_cover/"+filename,
-    type:"delete",
-    success:function(result){
-        alert(result.message);
-        if(result.status) {
-            book_covers = book_covers.filter((img)=>filename != img.filename);
-            console.log(book_covers)
-            $(".book_cover_area").html("");
+    $.ajax({
+        url:"/images/delete/book_cover/"+filename,
+        type:"delete",
+        success:function(result){
+            if(result.status) {
+                book_covers = book_covers.filter((img)=>filename != img.book_covers);
+                $(".book_cover_area").html("");
             for(let i=0; i<book_covers.length; i++) {
                 let tag = 
-                '<div class="book_img" filename="' + book_covers[i].book_covers+ '","'+book_covers[i].seq+'"' +
-                'style="background-image:url(\'/images/book_cover/'+book_covers[i].book_covers+'\','+book_covers[i].seq+')">'+
-                '<button onclick="deleteImg(\''+book_covers[i].book_covers+'\', '+book_covers[i].seq+')">&times;</button>'+
+                '<div class="book_img" filename="' + book_covers[i].book_covers+ '","'+book_covers[i].seq+'" '+
+                'style="background-image:url(\'/images/book_cover/'+book_covers[i].book_covers+'")">'+
+                '<button onclick="deleteImg(\''+book_covers[i].book_covers+'\','+book_covers[i].seq+')">&times;</button>'+
                 '</div>';
                 $(".book_cover_area").append(tag);
             }
