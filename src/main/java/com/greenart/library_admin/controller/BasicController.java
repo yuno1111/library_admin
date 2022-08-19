@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.greenart.library_admin.data.PagingVO;
 import com.greenart.library_admin.mapper.BasicMapper;
 
 @Controller
@@ -44,9 +45,23 @@ public class BasicController {
     @RequestParam @Nullable Integer page
     ){
         if(page==null)page=1;
+
+        int totalPage = basic_mapper.selectAllUserAccountPageCnt(keyword);
+        int totalCount = basic_mapper.selectAllUserAccountAllCnt(keyword);
+
+        PagingVO pager = new PagingVO(totalPage, page, totalCount);
+
+
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("page", page);
+
+        model.addAttribute("startPage", pager.getStartPage());
+        model.addAttribute("endPage", pager.getEndPage());
+
+
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", basic_mapper.selectAllUserAccount(keyword, (page-1)*10));
-        model.addAttribute("pageCnt", basic_mapper.selectAllUserAccountPageCnt(keyword));
         return "/basic/user_account_list";
     }
     @GetMapping("/user/account/detail")

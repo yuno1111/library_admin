@@ -1,3 +1,4 @@
+let current = 1;
 $(function(){
     getQnaList(null);
     makePager();
@@ -7,6 +8,63 @@ $(function(){
     })
     $(".total_upload_book_list_item").click(function(){$(".total_upload_book_list_popup").show()})
     $(".books_summary_list_cancel").click(function(){$(".total_upload_book_list_popup").hide()})
+
+    $(".pager_first").click(function(){
+        let keyword = $(".keyword").val();
+        if(keyword=='') keyword == '%%';
+        $.ajax({
+            url:"/api/qna_list?keyword="+keyword,
+            type:"get",
+            success:function(r){
+                    getQnaList(1);
+                    current = 1;
+                    $(".search_pager_area").html("");
+                    for(let i = 1; i<=r.endPage; i++){
+                        let tag = '';
+                        if(i == current) {
+                            tag = '<button class="pager current">'+i+'</button>';
+                        }
+                        else {
+                            tag = '<button class="pager">'+i+'</button>';
+                        }
+                        $(".search_pager_area").append(tag);
+                    }
+                    $(".pager").click(function(){
+                        current = $(this).html();
+                        pager($(this).html());
+                    })
+            }
+        })
+
+    })
+    $(".pager_end").click(function(){
+        let keyword = $(".keyword").val();
+        if(keyword=='') keyword == '%%';
+        $.ajax({
+            url:"/api/qna_list?keyword="+keyword,
+            type:"get",
+            success:function(r){
+                    getQnaList(r.qnaCnt);
+                    $(".search_pager_area").html("");
+                    current = r.qnaCnt;
+                    for(let i = r.qnaCnt-5; i<=r.qnaCnt; i++){
+                        let tag = '';
+                        if(i == current) {
+                            tag = '<button class="pager current">'+i+'</button>';
+                        }
+                        else {
+                            tag = '<button class="pager">'+i+'</button>';
+                        }
+                        $(".search_pager_area").append(tag);
+                    }
+                    $(".pager").click(function(){
+                        current = $(this).html();
+                        pager($(this).html());
+                    })
+            }
+        })
+
+    })
 })
 
 
@@ -37,7 +95,7 @@ function getQnaList(page) {
                 }
                 let tag =
                 '<tr>'+
-                    '<td>'+(i+1)+'</td>'+
+                    '<td>'+r.qnaList[i].qi_seq+'</td>'+
                     '<td>'+
                         '<a href="/question/qna_detail?seq='+r.qnaList[i].qi_seq+'">'+r.qnaList[i].qi_title+'</a>'+
                     '</td>'+
@@ -45,7 +103,7 @@ function getQnaList(page) {
                         ''+r.qnaList[i].id+''+
                     '</td>'+
                     '<td>'+check+'</td>'+
-                    '<td>'+makeDateStr(new Date(r.qnaList[i].qi_reg_dt))+'</td>'+
+                    '<td>'+makeDateString(new Date(r.qnaList[i].qi_reg_dt))+'</td>'+
                 '</tr>';
                 $(".qna_list_item").append(tag);
             }
@@ -56,7 +114,6 @@ function getQnaList(page) {
 function makePager(){
     let keyword = $(".keyword").val();
     if(keyword=='') keyword = null;
-
     let url = "/api/qna_list";
     if(keyword != null) url += "?keyword="+keyword;
     $.ajax({
@@ -64,17 +121,41 @@ function makePager(){
         type:"get",
         success:function(r){
             $(".search_pager_area").html("");
-            for(let i = 0; i<r.qnaCnt; i++){
-                let tag = '<button class="pager">'+(i+1)+'</button>';
+            for(let i = r.startPage; i<=r.endPage; i++){
+                let tag = '<button class="pager">'+i+'</button>';
                 $(".search_pager_area").append(tag);
             }
-
             $(".pager").eq(0).addClass("current");
-
             $(".pager").click(function(){
-                $(".pager").removeClass("current");
-                $(this).addClass("current");
-                getQnaList($(this).html());
+                current = $(this).html();
+                pager($(this).html());
+            })
+        }
+    })
+}
+
+function pager(page){
+    let keyword = $(".keyword").val();
+    if(keyword=='') keyword == '%%';
+    $.ajax({
+        url:"/api/qna_list?keyword="+keyword+"&page="+page,
+        type:"get",
+        success:function(r){
+            $(".search_pager_area").html("");
+            for(let i = r.startPage; i<=r.endPage; i++){
+                let tag = ''
+                if(i == current) {
+                    tag = '<button class="pager current">'+i+'</button>';
+                }
+                else {
+                    tag = '<button class="pager">'+i+'</button>';
+                }
+                $(".search_pager_area").append(tag);
+            }
+            getQnaList(r.page);
+            $(".pager").click(function(){
+                current = $(this).html();
+                pager($(this).html());
             })
         }
     })

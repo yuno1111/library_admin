@@ -28,7 +28,7 @@ function phoneNumberValidate(phone) {
 }
 
 function makeDateString(date){
-    return date.getFullYear()+"-"+leadingZero(date.getMonth()+1)+"-"+leadingZero(date.getDate());
+    return date.getFullYear()+"-"+leadingZero(date.getMonth()+1)+"-"+leadingZero(date.getDate())+" "+leadingZero(date.getHours())+":"+leadingZero(date.getMinutes())+":"+leadingZero(date.getSeconds());
 }
 
 function leadingZero(n) {

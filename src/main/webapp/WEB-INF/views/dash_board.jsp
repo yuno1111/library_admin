@@ -63,8 +63,10 @@
                     
                 </tbody>
             </table>
+            <button class="pager_first">처음</button>
             <div class="search_pager_area">
             </div>
+            <button class="pager_end">끝</button>
         </div>
     </main>
 </body>

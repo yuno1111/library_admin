@@ -24,6 +24,12 @@
         (#{item.order},#{item.content},#{seq})
         </foreach>
     </insert>
+    <insert id="insertBookTextFile">
+        INSERT INTO book_text_info
+        (bt_bi_seq, bt_text_file, bt_reg_dt, bt_mod_dt)
+        VALUES
+        (#{seq}, #{text}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    </insert>
 
     <insert id="insertRecommendBooks">
         INSERT INTO admin_recommend_books
@@ -89,6 +95,9 @@
     </select>
     <select id="selectBookContentBySeq" resultType="com.greenart.library_admin.data.request.BookContentListVO">
         select bcon_page as 'order', bcon_text as content from book_content_info where bcon_bi_seq = #{seq}
+    </select>
+    <select id="selectBookTextFileBySeq" resultType="java.lang.String">
+        select bt_text_file from book_text_info where bt_bi_seq=#{seq}
     </select>
     <select id="selectBooksCoverBySeq" resultType="com.greenart.library_admin.data.request.BookCoverListVO">
         select bc_seq as seq,bc_img_file as book_covers from book_cover_info where bc_bi_seq = #{seq}

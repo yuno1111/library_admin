@@ -40,6 +40,9 @@
                 <a href="/books/book/list">도서 관리 페이지</a>
             </li>
             <li>
+                <a href="/books/book_add/temp">임시 도서 추가 페이지</a>
+            </li>
+            <li>
                 <a href="/books/recommend/list">도서 추천 리스트 관리 페이지</a>
             </li>
             <li>

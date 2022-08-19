@@ -16,6 +16,7 @@ public interface BookMapper {
     public void insertBookInfo(Book_infoVO data);
     public void insertBookCover(List<BookCoverListVO> data,Integer seq);
     public void insertBookContent(List<BookContentListVO> data, Integer seq);
+    public void insertBookTextFile(String text, Integer seq);
     public void insertRecommendBooks(List<Integer> data,String title);
 
     public void patchBookInfo(Book_infoVO data);
@@ -33,6 +34,7 @@ public interface BookMapper {
     public Book_infoVO selectSummaryBooksBySeq(Integer seq);
     public List<BookCoverListVO> selectBooksCoverBySeq(Integer seq);
     public List<BookContentListVO> selectBookContentBySeq(Integer seq);
+    public String selectBookTextFileBySeq(Integer seq);
     public void deleteBookCovers(Integer seq);
     public void deleteBook(Integer seq);
     public void insertBookCovers(BookCoverListVO data);

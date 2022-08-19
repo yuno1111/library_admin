@@ -18,7 +18,7 @@
             <input type="text" class="aai_id" placeholder="아이디를 입력하세요">
                 <p class="error" hidden>아이디를 올바르게 입력하세요.</p>
             <p>비밀번호</p>
-            <input type="password" class="aai_pwd" placeholder="아이디를 입력하세요">
+            <input type="password" class="aai_pwd" placeholder="비밀번호를 입력하세요">
                 <p class="error" hidden>비밀번호를 올바르게 입력하세요.</p>
             <button class="login">로그인</button>
         </div>

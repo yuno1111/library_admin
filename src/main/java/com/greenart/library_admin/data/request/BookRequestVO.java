@@ -11,4 +11,5 @@ public class BookRequestVO {
     private Book_infoVO book_info;
     private List<BookCoverListVO> book_covers;
     private List<BookContentListVO> book_content_list;
+    private String bt_text_file;
 }

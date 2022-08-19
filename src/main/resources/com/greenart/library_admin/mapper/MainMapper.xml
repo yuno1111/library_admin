@@ -8,11 +8,14 @@
         from question_info a left outer join reader_info b
         on a.qi_rd_seq = b.rd_seq
         where qi_title like '%${keyword}%' 
-        order by qi_reg_dt asc
+        order by qi_reg_dt desc
         limit 10 offset #{offset}
     </select>
     <select id="selectQuestionByCnt" resultType="java.lang.Integer">
         select ceil(count(*)/10) from question_info where qi_title like '%${keyword}%'
+    </select>
+    <select id="selectAllQuestionCount" resultType="java.lang.Integer">
+        select count(*) from question_info where qi_title like '%${keyword}%'
     </select>
     <!-- ========= -->
     <!-- 통계 정보 -->
@@ -33,4 +36,20 @@
         limit 10
     </select>
     <!-- ======== -->
+    <insert id="insertReaderInfo">
+        INSERT INTO reader_info
+        (rd_id, rd_pwd, rd_name, rd_nickname, rd_birth, rd_gen, rd_reg_dt)
+        VALUES
+        <foreach collection="datas" item="user" separator=",">
+        (#{user.rd_id}, #{user.rd_pwd}, #{user.rd_name}, #{user.rd_nickname}, #{user.rd_birth}, #{user.rd_gen}, #{user.rd_reg_dt})
+        </foreach>
+    </insert>
+    <insert id="insertQnaInfo">
+        INSERT INTO question_info
+        (qi_rd_seq, qi_text, qi_check, qi_title, qi_reg_dt)
+        VALUES
+        <foreach collection="datas" item="qna" separator=",">
+        (#{qna.qi_rd_seq}, #{qna.qi_text}, 0, #{qna.qi_title}, now())
+        </foreach>
+    </insert>
 </mapper>

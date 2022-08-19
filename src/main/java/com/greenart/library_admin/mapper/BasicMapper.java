@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import com.greenart.library_admin.data.AdminAccountInfoVO;
 import com.greenart.library_admin.data.BookReplyDetailVO;
 import com.greenart.library_admin.data.ReaderInfoVO;
+import com.greenart.library_admin.data.ReaderStatusEditVO;
+import com.greenart.library_admin.data.ReaderStatusSimpleVO;
 import com.greenart.library_admin.data.RecurringPaymentVO;
 import com.greenart.library_admin.data.genre_info;
 import com.greenart.library_admin.data.writer_info;
@@ -25,12 +27,19 @@ public interface BasicMapper {
     public Integer selectAllAdminAccountPageCnt(String keyword);
     public void insertAdminAccount(AdminAccountInfoVO data);
     public void deleteAdminAccount(Integer seq);
-
+    
     public List<ReaderInfoVO> selectAllUserAccount(String keyword,Integer offset);
     public Integer selectAllUserAccountPageCnt(String keyword);
+    public Integer selectAllUserAccountAllCnt(String keyword);
     public BookReplyDetailVO selectUserCommentBySeq(Integer seq);
-
+    
     public List<RecurringPaymentVO> selectAllPayment();
     public void insertPayment(RecurringPaymentVO data);
     public void deletePayment(Integer seq);
+    
+    public ReaderStatusSimpleVO selectReaderStatus(Integer seq);
+    public void insertReaderStatusEdit(ReaderStatusEditVO data);
+    public void updateReaderStatus(Integer rd_seq, Integer status);
+    public void updateReaderPwd(Integer rd_seq, String pwd);
+    public void deleteUserAccount(Integer seq);
 }

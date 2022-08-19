@@ -1,5 +1,13 @@
 package com.greenart.library_admin.api;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,11 +27,13 @@ import com.greenart.library_admin.data.Book_infoVO;
 import com.greenart.library_admin.data.request.BookCoverListVO;
 import com.greenart.library_admin.data.request.BookRequestVO;
 import com.greenart.library_admin.data.request.RecommendBooksList;
+import com.greenart.library_admin.mapper.BasicMapper;
 import com.greenart.library_admin.mapper.BookMapper;
 
 @RestController
 @RequestMapping("/api")
 public class BookAPIController {
+    @Autowired BasicMapper basic_mapper;
     @Autowired BookMapper book_mapper;
     @PutMapping("/book_add")
     @Transactional
@@ -39,6 +49,53 @@ public class BookAPIController {
         resultMap.put("message", "책 정보를 추가하였습니다.");
         return resultMap;
     }
+    @PutMapping("/book_add/temp")
+    @Transactional
+    public Map<String,Object> putAddbookTemp(@RequestBody BookRequestVO datas) throws Exception{
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        Book_infoVO book = datas.getBook_info();
+        book_mapper.insertBookInfo(book);
+        datas.getBook_covers().get(0).setIs_poster(1);
+        book_mapper.insertBookCover(datas.getBook_covers(),book.getBi_seq());
+        Calendar c = Calendar.getInstance();
+        Long timestamp = c.getTimeInMillis();
+        String filename = "textfile_"+timestamp+".txt";
+        String filepath = "/library/book_text/"+filename;
+        File file = new File(filepath);
+        file.createNewFile();
+        book_mapper.insertBookTextFile(filename, book.getBi_seq());
+        
+        BufferedWriter bw = new BufferedWriter(
+            new OutputStreamWriter(
+                new FileOutputStream(file),"UTF-8"
+                )
+            );
+        bw.write(datas.getBt_text_file());
+        bw.newLine();
+        bw.close();
+
+        resultMap.put("status", true);
+        resultMap.put("message", "책 정보를 추가하였습니다.");
+        return resultMap;
+    }
+    @GetMapping("/book_detail/temp")
+    public Map<String,Object> getBookDetail(@RequestParam Integer seq) throws Exception{
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        String contentList = book_mapper.selectBookTextFileBySeq(seq);
+        String filepath = "/library/book_text/";
+        String filename = filepath+contentList;
+
+        BufferedReader br = new BufferedReader(new FileReader (new File(filename)));
+        contentList = br.readLine();
+        br.close();
+        resultMap.put("bookList", book_mapper.selectBooksBySeq(seq));
+        resultMap.put("coverList", book_mapper.selectBooksCoverBySeq(seq));
+        resultMap.put("contentList", contentList);
+        resultMap.put("genreList", basic_mapper.selectGenre());
+        resultMap.put("writerList", basic_mapper.selectWriter());
+        return resultMap;
+    }
+
     @PatchMapping("/book_modify")
     @Transactional
     public Map<String,Object> patchBook(@RequestBody BookRequestVO datas){
@@ -62,7 +119,7 @@ public class BookAPIController {
         return resultMap;
     }
     @GetMapping("/book/comment/list")
-    public Map<String, Object> selectAlbumCommentList(
+    public Map<String, Object> selectBookCommentList(
         @RequestParam Integer seq, @RequestParam @Nullable Integer page) {
         if(page == null) page = 1;
         Map<String, Object> resultMap = new LinkedHashMap<String, Object>();

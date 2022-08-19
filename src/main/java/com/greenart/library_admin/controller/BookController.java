@@ -22,6 +22,17 @@ public class BookController {
         model.addAttribute("writerList", basic_mapper.selectWriter());
         return "/books/book_add";
     }
+    @GetMapping("/book_add/temp")
+    public String getBookAddTemp(Model model){
+        model.addAttribute("genreList", basic_mapper.selectGenre());
+        model.addAttribute("writerList", basic_mapper.selectWriter());
+        return "/books/book_add_temp";
+    }
+    @GetMapping("/book_detail/temp")
+    public String getBookDetailTemp(Model model,@RequestParam Integer seq){
+        model.addAttribute("seq", seq);
+        return "/books/book_detail_temp";
+    }
     @GetMapping("/book/summary")
     public String getBookSummary(Model model,@RequestParam Integer seq){
         model.addAttribute("list", book_mapper.selectSummaryBooksBySeq(seq));

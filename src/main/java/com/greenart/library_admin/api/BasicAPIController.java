@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.greenart.library_admin.data.AdminAccountInfoVO;
+import com.greenart.library_admin.data.ReaderStatusEditVO;
 import com.greenart.library_admin.data.RecurringPaymentVO;
 import com.greenart.library_admin.mapper.BasicMapper;
 import com.greenart.library_admin.util.AESAlgorithm;
@@ -23,6 +26,7 @@ import com.greenart.library_admin.util.AESAlgorithm;
 @RestController
 @RequestMapping("/api")
 public class BasicAPIController {
+    private static String[] makePwd = {"a","b","c","d","e","f","g","h","i","j","k","l","1","2","3","4","5","6","7","8","9","0"};
     @Autowired BasicMapper basic_mapper;
     @PutMapping("/genre_add")
     public Map<String,Object> putGenre(@RequestParam String name){
@@ -102,11 +106,54 @@ public class BasicAPIController {
         return resultMap;
     }
     @DeleteMapping("/admin/delete")
-    public Map<String,Object> putAdminJoin(@RequestParam Integer seq){
+    public Map<String,Object> deleteAdminAccount(@RequestParam Integer seq){
         Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
         basic_mapper.deleteAdminAccount(seq);
         resultMap.put("status", true);
         resultMap.put("message", "관리자계정을 삭제하였습니다");
+        return resultMap;
+    }
+
+    @DeleteMapping("/user/delete")
+    public Map<String,Object> deleteUserAccount(@RequestParam Integer seq){
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        basic_mapper.deleteUserAccount(seq);
+        resultMap.put("status", true);
+        resultMap.put("message", "유저계정을 삭제하였습니다");
+        return resultMap;
+    }
+    @GetMapping("/user/status")
+    public Map<String,Object> getUserStatus(@RequestParam Integer seq){
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        resultMap.put("list", basic_mapper.selectReaderStatus(seq));
+        return resultMap;
+    }
+    @PutMapping("/user_status/edit")
+    public Map<String,Object> putUserStatus(@RequestBody ReaderStatusEditVO data){
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        basic_mapper.insertReaderStatusEdit(data);
+        basic_mapper.updateReaderStatus(data.getRd_seq(), data.getStatus());
+        resultMap.put("status", true);
+        resultMap.put("message", "유저 상태를 변경하였습니다.");
+        return resultMap;
+    }
+    @PatchMapping("/user/pwd_reset")
+    public Map<String,Object> putUserStatus(@RequestParam Integer seq) throws Exception{
+        Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+        int r = (int)(Math.random()*2);
+        String tempPwd = "";
+        for(int i=0; i<8; i++){
+            if(r == 0) {
+                tempPwd += makePwd[(int)(Math.random()*makePwd.length)];
+            }
+            else {
+                tempPwd += makePwd[(int)(Math.random()*makePwd.length)];
+            }
+        } 
+        resultMap.put("status", true);
+        resultMap.put("message", "임시 비밀번호는 : "+tempPwd+" 입니다.");
+        String realPwd =  AESAlgorithm.Encrypt(tempPwd);
+        basic_mapper.updateReaderPwd(seq, realPwd);
         return resultMap;
     }
 }

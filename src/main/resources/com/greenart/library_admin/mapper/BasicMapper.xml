@@ -53,13 +53,16 @@
         select ceil(count(*)/10) from admin_account_info where aai_id like '%${keyword}%'
     </select>
     <select id="selectAllUserAccount" resultType="com.greenart.library_admin.data.ReaderInfoVO">
-        select rd_seq,rd_rp_seq,rd_id,rd_name,rd_phone,rd_gen,rd_role,rd_status,rd_nickname,rd_reg_dt,rd_mod_dt,rd_profile
+        select rd_seq,rd_rpi_seq,rd_id,rd_name,rd_phone,rd_gen,rd_role,rd_status,rd_nickname,rd_reg_dt,rd_mod_dt,rd_profile
         from reader_info where rd_id like '%${keyword}%'
         order by rd_seq desc
         limit 10 offset #{offset}
     </select>
     <select id="selectAllUserAccountPageCnt" resultType="java.lang.Integer">
         select ceil(count(*)/10) from reader_info where rd_id like '%${keyword}%'
+    </select>
+    <select id="selectAllUserAccountAllCnt" resultType="java.lang.Integer">
+        select count(*) from reader_info where rd_id like '%${keyword}%'
     </select>
     <select id="selectUserCommentBySeq" resultType="com.greenart.library_admin.data.BookReplyDetailVO">
         select a.*,b.bi_seq ,b.bi_title,c.bc_img_file,d.rd_id  from book_reply a inner join book_info b
@@ -71,7 +74,9 @@
         on a.bre_rd_seq = d.rd_seq 
         where bre_rd_seq = #{seq}
     </select>
-    
+    <select id="selectReaderStatus" resultType="com.greenart.library_admin.data.ReaderStatusSimpleVO">
+        select rd_seq,rd_id ,rd_status  from reader_info where rd_seq = #{seq}
+    </select>
 
     <insert id="insertAdminAccount">
     INSERT INTO admin_account_info
@@ -79,9 +84,29 @@
     VALUES
     (#{aai_id}, #{aai_pwd}, #{aai_role})
     </insert>
+    <insert id="insertReaderStatusEdit">
+        INSERT INTO reader_status_edit
+        (rse_rd_seq, rse_reason, rse_reg_dt)
+        VALUES
+        (#{rse_rd_seq}, #{rse_reason}, CURRENT_TIMESTAMP);
+    </insert>
+
+    <update id="updateReaderStatus">
+        update reader_info
+        set rd_status = #{status}
+        where rd_seq = #{rd_seq}
+    </update>
+    <update id="updateReaderPwd">
+        update reader_info
+        set rd_pwd = #{pwd}
+        where rd_seq = #{rd_seq}
+    </update>
 
     <delete id="deleteAdminAccount">
         delete from admin_account_info where aai_seq = #{seq}
+    </delete>
+    <delete id="deleteUserAccount">
+        delete from reader_info where rd_seq = #{seq}
     </delete>
     <!-- ========== -->
 </mapper>
